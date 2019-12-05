@@ -46,8 +46,8 @@ Begin {
             if($PAT -ne '') {
                 $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f '',$PAT)))
                 $header = @{ Authorization = ("Basic {0}" -f $base64AuthInfo) }
-            } elseif ($env:SYSTEM_ACCESSTOKEN -ne ''){
-                $header = @{ Authorization = "Bearer $env:SYSTEM_ACCESSTOKEN" }
+            } elseif ($env:SYSTEM_ACCESSTOKEN -ne '') {
+                $header = @{ Authorization = ("Bearer {0}" -f $env:SYSTEM_ACCESSTOKEN) }
             } else {
                 Write-Error "WTF: Wo ist der PAT"
                 exit -1
@@ -103,15 +103,15 @@ Process {
         $res = Get-WiData -Uri ("{0}/_apis/wit/workitems/{1}?api-version={2}" -f $Uri, $wi, '5.1') -PAT $PAT
         Write-Verbose ("ID : {0}, Title: {1}, Description: {2}" -f $res.Id, $res.fields.'System.Title', $res.fields.'System.Description')
 
-        #Create a row
+        # Create a new row
         $row = $ReleaseNotes.NewRow()
 
-        #Enter data in the row
+        # Fill Columns
         $row.Id = $res.Id
         $row.Title = $res.fields.'System.Title'
         $row.Description = $res.fields.'System.Description'
 
-        #Add the row to the table
+        # Add the row to the table
         $ReleaseNotes.Rows.Add($row)
     }
 }
