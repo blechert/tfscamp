@@ -54,7 +54,7 @@ Begin {
     function Format-MdOutput{
         Param (
             # DatatTable to export
-            [Parameter(Mandatory=$true)]
+            [Parameter(Mandatory=$true, Position=0)]
                 [System.Data.DataTable] $ReleaseNotes
         )
 
