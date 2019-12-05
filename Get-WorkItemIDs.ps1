@@ -11,18 +11,17 @@
 [CmdletBinding()]
 [OutputType([string])]
 param(
-    # Array of WorkItem IDs
     [Parameter(Mandatory=$true, ValueFromPipeline)]
         [int[]] $PRIDs,
-    # https://dev.azure.com/{organization}/{project}
     [Parameter(Mandatory=$true)]
         [string] $Uri,
-    # Access token
     [Parameter(Mandatory=$true)]
         [string] $PAT
 )
 
 Begin {
+    $IDs = New-Object System.Collections.ArrayList;
+
     function Get-WIIDs {
         [OutputType([PSCustomObject])]
         param (
@@ -58,9 +57,11 @@ Process {
 
         foreach ($value in $res.value)  
         {
-            Write-Host ($value.'id')
+            $r = $IDs.Add($value.'id');
         }        
     }
 }
 
-End {}
+End {
+    return $IDs;
+}
