@@ -6,17 +6,13 @@
 .NOTES
 .COMPONENT
 .EXAMPLE
-.\Get-WorkItemIDs.ps1 -Uri 'https://dev.azure.com/{organisation}}/{project}' -PAT '<YourToken>' -PRIDs @(1,2,3)
+.\Get-WorkItemIDs.ps1 -PRIDs @(1,2,3)
 #>
 [CmdletBinding()]
 [OutputType([string])]
 param(
     [Parameter(Mandatory=$true, ValueFromPipeline)]
-        [int[]] $PRIDs,
-    [Parameter(Mandatory=$true)]
-        [string] $Uri,
-    [Parameter(Mandatory=$true)]
-        [string] $PAT
+        [int[]] $PRIDs
 )
 
 Begin {
@@ -51,13 +47,18 @@ Begin {
 }
 
 Process {
+    $devops_baseUrl = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
+    $devops_team = $env:SYSTEM_TEAMPROJECT
+    $devops_repo = $env:BUILD_REPOSITORY_NAME
+    $pat =  $Env:SYSTEM_ACCESSTOKEN
+
     foreach($PRID in $PRIDs) {
-        $request_uri = ("{0}/_apis/git/repositories/{1}/pullRequests/{2}/workitems?api-version={3}" -f $Uri, $env:BUILD_REPOSITORY_NAME, $PRID, '5.1')
-        $res = Get-WIIDs -Uri $request_uri -PAT $PAT
+        $request_uri = ("{0}{1}/_apis/git/repositories/{2}/pullRequests/{3}/workitems?api-version={4}" -f $devops_baseUrl,$devops_team,$devops_repo,$PRID,'5.1')
+        $res = Get-WIIDs -Uri $request_uri -PAT $pat
 
         foreach ($value in $res.value)  
         {
-            $r = $IDs.Add($value.'id');
+            $IDs.Add($value.'id') | Out-Null
         }        
     }
 }

@@ -1,23 +1,24 @@
-# TODO: This are environment variables
-# Remove this when its ready to run in a azure devops pipeline
-$SYSTEM_TEAMFOUNDATIONSERVERURI = "https://vsrm.dev.azure.com/***REMOVED***/"
-$SYSTEM_TEAMPROJECT = "***REMOVED***"
-$RELEASE_RELEASEID = 5160
-$RELEASE_DEFINITIONID = 9
-$RELEASE_DEFINITIONENVIRONMENTID = 84
-$BUILD_SOURCEVERSION = "ae143356b36b195bb2f0a53fece9bc2f0011986d"
-$RELEASE_PRIMARYARTIFACTSOURCEALIAS = "***REMOVED***"
+#Requires -version 4
+<#
+.SYNOPSIS
+    Retrive Pull Request IDs between two azure devops releases
+.DESCRIPTION
+.NOTES
+.COMPONENT
+.EXAMPLE
+.\extract-pr.ps1
+#>
 
 # Azure DevOps Properties
-$devops_team = $SYSTEM_TEAMPROJECT
-$devops_releaseDef = $RELEASE_DEFINITIONID
-$devops_releaseEnvDef = $RELEASE_DEFINITIONENVIRONMENTID
-$devops_baseUrl = $SYSTEM_TEAMFOUNDATIONSERVERURI
+$devops_team = $env:SYSTEM_TEAMPROJECT
+$devops_releaseDef = $env:RELEASE_DEFINITIONID
+$devops_releaseEnvDef = $env:RELEASE_DEFINITIONENVIRONMENTID
+$devops_baseUrl = $env:SYSTEM_TEAMFOUNDATIONSERVERURI
 
 # Required arguments to query the API
-$arg_currentReleaseId = $RELEASE_RELEASEID
-$arg_currentBuildVersion = $BUILD_SOURCEVERSION
-$arg_currentArtifactName = $RELEASE_PRIMARYARTIFACTSOURCEALIAS
+$arg_currentReleaseId = $env:RELEASE_RELEASEID
+$arg_currentBuildVersion = $env:BUILD_SOURCEVERSION
+$arg_currentArtifactName = $env:RELEASE_PRIMARYARTIFACTSOURCEALIAS
 $url_releases = "$devops_baseUrl/$devops_team/_apis/release/releases?api-version=5.1&definitionId=$devops_releaseDef&`$expand=environments,artifacts&definitionEnvironmentId=$devops_releaseEnvDef"
 
 # Perform a request to the Azure DevOps API

@@ -12,8 +12,8 @@
 .NOTES
 .COMPONENT
 .EXAMPLE
-.\MD_Generator.ps1 -Uri 'https://dev.azure.com/{organisation}}/{project}' -PAT '<YourToken>' -WiIds @(66,67,68)
-@(66,67,68) | .\MD_Generator.ps1 -Uri 'https://dev.azure.com/{organisation}}/{project}' -PAT '<YourToken>' | Out-File MyReleaseNotes.MD
+.\MD_Generator.ps1 -WiIds @(66,67,68)
+@(66,67,68) | .\MD_Generator.ps1 | Out-File MyReleaseNotes.MD
 
 #>
 [CmdletBinding()]
@@ -21,13 +21,7 @@
 param(
     # Array of WorkItem IDs
     [Parameter(Mandatory=$true, ValueFromPipeline)]
-        [int[]] $WiIds,
-    # https://dev.azure.com/{organization}/{project}
-    [Parameter(Mandatory=$true)]
-        [string] $Uri,
-    # Access token
-    [Parameter(Mandatory=$false)]
-        [string] $PAT = ''
+        [int[]] $WiIds
 )
 
 Begin {
@@ -98,9 +92,13 @@ Begin {
 }
 
 Process {
+    $devops_baseUrl = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
+    $devops_team = $env:SYSTEM_TEAMPROJECT
+    $pat =  $Env:SYSTEM_ACCESSTOKEN
+
     # Either will get the data from one Wi when piped or from all Wis in the array
     foreach($wi in $WiIds) {
-        $res = Get-WiData -Uri ("{0}/_apis/wit/workitems/{1}?api-version={2}" -f $Uri, $wi, '5.1') -PAT $PAT
+        $res = Get-WiData -Uri ("{0}{1}/_apis/wit/workitems/{2}?api-version={3}" -f $devops_baseUrl, $devops_team, $wi, '5.1') -PAT $pat
         Write-Verbose ("ID : {0}, Title: {1}, Description: {2}" -f $res.Id, $res.fields.'System.Title', $res.fields.'System.Description')
 
         # Create a new row
