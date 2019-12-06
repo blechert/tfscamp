@@ -64,5 +64,5 @@ Process {
 }
 
 End {
-    return $IDs;
+    return $IDs | Sort-Object | Get-Unique;
 }

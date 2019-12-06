@@ -86,4 +86,5 @@ $gitlog = Invoke-Expression "git --no-pager log --pretty=format:""%s"" --grep='M
 # Extract pull request IDs from the log output
 return $gitlog.split("`n") | Select-String -Pattern "^Merged PR ([0-9]+):" -List | 
     Where-Object { $_.matches.Success -eq $true } |
-    Foreach-Object { $_.matches.groups[1].Value }
+    Foreach-Object { $_.matches.groups[1].Value } |
+    Sort-Object | Get-Unique
