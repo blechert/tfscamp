@@ -1,4 +1,6 @@
 *-secrets.json
+*-env.ps1
+!demo-env.ps1
 
 .vscode/*
 !.vscode/settings.json

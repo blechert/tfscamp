@@ -80,7 +80,6 @@ $sourceref = $lastRelease.commit
 $targetref = $arg_currentBuildVersion
 
 # Create log
-# git -C ""C:\sources\***REMOVED***""
 $gitlog = Invoke-Expression "git --no-pager log --pretty=format:""%s"" --grep='Merged PR' $sourceref..$targetref"
 
 # Extract pull request IDs from the log output
