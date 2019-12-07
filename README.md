@@ -28,7 +28,7 @@ Usage:
 cd sourcecode-repo
 # set the environment vars, only needed for demos
 ..\tfscamp\demo-env.ps1
-# set a personal access token
+# set a personal access token, only needed for demos
 $env:SYSTEM_ACCESSTOKEN="XXXXXXXXXXXXXXXXXXXXXX"
 # execute the scripts
 ..\tfscamp\extract-pr.ps1 | ..\tfscamp\Get-WorkItemIDs.ps1 | ..\tfscamp\MD_Generator.ps1
